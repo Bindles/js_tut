@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .book-card { border: 1px solid #ccc; padding: 10px; margin: 10px; border-radius: 5px; }
+    .controls { margin-top: 10px; }
+    button { margin-right: 5px; }
+    #newBookForm { display: none; border: 1px solid #ccc; padding: 15px; margin: 15px; border-radius: 5px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+  </style>
+</head>
+<body>
+  <h1>Library</h1>
+  <button id="showFormButton">Add New Book</button>
+  <div id="newBookForm">
+    <h2>New Book</h2>
+    <form id="bookForm">
+      <label>Title: <input type="text" id="title" required></label><br>
+      <label>Author: <input type="text" id="author" required></label><br>
+      <label>Pages: <input type="number" id="pages" required></label><br>
+      <label>Read: <input type="checkbox" id="read"></label><br>
+      <button type="submit">Add Book</button>
+    </form>
+  </div>
+  <div id="library"></div>
+  <!-- <script src="app.js"> -->
+  <script>
+// Array to store books
+const myLibrary = [];
+
+// Book Constructor
+function Book(title, author, pages, read) {
+  this.title = title;
+  this.author = author;
+  this.pages = pages;
+  this.read = read;
+}
+
+// Method to toggle read status
+Book.prototype.toggleRead = function () {
+  this.read = !this.read;
+};
+
+// Function to add a book to the library
+function addBookToLibrary(title, author, pages, read) {
+  const newBook = new Book(title, author, pages, read);
+  myLibrary.push(newBook);
+  renderLibrary();
+}
+
+// Function to remove a book from the library
+function removeBook(index) {
+  myLibrary.splice(index, 1);
+  renderLibrary();
+}
+
+// Function to render the library
+function renderLibrary() {
+  const libraryDiv = document.getElementById("library");
+  libraryDiv.innerHTML = ""; // Clear previous content
+
+  if (myLibrary.length === 0) {
+    libraryDiv.innerHTML = "<p>No books in the library.</p>";
+    return;
+  }
+
+  const table = document.createElement("table");
+  const headerRow = `
+    <tr>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Pages</th>
+      <th>Read</th>
+      <th>Actions</th>
+    </tr>`;
+  table.innerHTML = headerRow;
+
+  myLibrary.forEach((book, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${book.title}</td>
+      <td>${book.author}</td>
+      <td>${book.pages}</td>
+      <td>${book.read ? "Yes" : "No"}</td>
+      <td>
+        <button onclick="removeBook(${index})">Remove</button>
+        <button onclick="toggleReadStatus(${index})">${book.read ? "Mark as Unread" : "Mark as Read"}</button>
+      </td>`;
+    table.appendChild(row);
+  });
+
+  libraryDiv.appendChild(table);
+}
+
+// Function to toggle the read status of a book
+function toggleReadStatus(index) {
+  myLibrary[index].toggleRead();
+  renderLibrary();
+}
+
+// Event Listeners
+document.getElementById("showFormButton").addEventListener("click", () => {
+  const form = document.getElementById("newBookForm");
+  form.style.display = form.style.display === "none" ? "block" : "none";
+});
+
+document.getElementById("bookForm").addEventListener("submit", (e) => {
+  e.preventDefault(); // Prevent page reload
+  const title = document.getElementById("title").value;
+  const author = document.getElementById("author").value;
+  const pages = parseInt(document.getElementById("pages").value, 10);
+  const read = document.getElementById("read").checked;
+
+  addBookToLibrary(title, author, pages, read);
+  document.getElementById("bookForm").reset();
+  document.getElementById("newBookForm").style.display = "none";
+});
+
+// Example books
+addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 310, true);
+addBookToLibrary("1984", "George Orwell", 328, false);
+  
+  </script>
+</body>
+</html>

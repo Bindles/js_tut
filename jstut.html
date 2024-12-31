@@ -1,0 +1,31 @@
+<script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar/bundles/datastar.js"></script>
+
+<!-- 
+let heading = document.getElementById("header"); // By ID
+let buttons = document.getElementsByClassName("btn"); // By class
+let divs = document.querySelectorAll("div"); // CSS selectors
+-->
+<h1>Hi</h1>
+<h1 id='h1_two'>h1 2</h1>
+
+<header id="head">JS Tut</header>
+<button id='myButton' onClick='clickHard()'>BUtton </button>
+<script>
+const myHeading = document.querySelector("h1");
+myHeading.textContent = "Hello world!";
+
+let heading = document.getElementById("head"); // By ID
+let buttons = document.getElementsByClassName("btn"); // By class
+let divs = document.querySelectorAll("div"); // CSS selectors
+
+document.getElementById("myButton").addEventListener("click", () => {
+  alert("Button clicked!");
+});
+
+function clickHard() {
+
+	alert("button clicked hard && triggers first from inline onClick")
+alert(`${document.getElementById("myButton").id} clicked hard`)	
+}
+
+</script>

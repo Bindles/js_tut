@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nunjucks Example</title>
+</head>
+<body>
+  <h1>Pokémon List</h1>
+
+  <!-- Buttons -->
+  <button id="fetch-store-button">Fetch & Store Pokémon</button>
+  <button id="render-button">Render Pokémon</button>
+
+  <!-- Results Container -->
+  <div id="results"></div>
+
+  <!-- Nunjucks Template -->
+  <script id="pokemon-template" type="text/x-nunjucks-template">
+    {% if pokeData %}
+    <ul>
+      {% for pokemon in pokeData %}
+      <li>
+        <strong>{{ pokemon.name }}</strong> - <a href="{{ pokemon.url }}" target="_blank">Details</a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No Pokémon data available.</p>
+    {% endif %}
+  </script>
+
+  <!-- Nunjucks Library -->
+<script src="
+https://cdn.jsdelivr.net/npm/nunjucks@3.2.4/browser/nunjucks.min.js
+"></script>
+
+  <script>
+    // Initialize Nunjucks
+    nunjucks.configure({ autoescape: true });
+
+    // Global Data Storage
+    let pokemonData = [];
+
+    // Fetch and Store Data
+    document.getElementById('fetch-store-button').addEventListener('click', () => {
+      fetch('https://pokeapi.co/api/v2/pokemon?limit=5')
+        .then(response => response.json())
+        .then(data => {
+          pokemonData = data.results; // Store globally
+          console.log('Data fetched and stored:', pokemonData);
+          alert('Data fetched and stored! Check console.');
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    });
+
+    // Render Data with Nunjucks
+    document.getElementById('render-button').addEventListener('click', () => {
+      const resultsContainer = document.getElementById('results');
+      const template = document.getElementById('pokemon-template').innerHTML;
+
+      // Render with Nunjucks
+      const renderedHtml = nunjucks.renderString(template, { pokeData: pokemonData });
+      resultsContainer.innerHTML = renderedHtml;
+    });
+  </script>
+</body>
+</html>

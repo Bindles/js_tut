@@ -1,0 +1,74 @@
+<script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar/bundles/datastar.js"></script>
+
+<h1>Hi</h1>
+<h1 id="secondary-heading">Second Heading</h1>
+
+<header id="main-header">JavaScript Tutorial</header>
+
+<!-- Buttons -->
+<button id="alert-button" onClick="handleInlineClick()">Alert Button</button>
+<button id="fetch-poke-button" onClick="fetchPokemon()">Fetch Pokémon</button>
+<button id="fetch-limited-poke-button" onClick="fetchWithLimit(5)">Fetch Pokémon (Limit)</button><br>
+<button id="fetch-and-store-poke-button" onClick="fetchAndStorePokemon(7)">Fetch/Store Poke</button>
+
+<!-- Results Container -->
+<div id="results"></div>
+
+<script>
+  // Inline Click Handler
+  function handleInlineClick() {
+    alert(`Button with ID 'alert-button' clicked inline!`);
+  }
+
+  // Fetch Pokémon and log to the console
+  function fetchPokemon() {
+    fetch("https://pokeapi.co/api/v2/pokemon?limit=3")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Fetched Pokémon Data:", data);
+        alert("Check the console for Pokémon data!");
+      })
+      .catch((error) => console.error("Error fetching Pokémon:", error));
+  }
+
+  // Fetch Pokémon with a specified limit and render results
+  function fetchWithLimit(limit) {
+    fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const resultsContainer = document.getElementById("results");
+        resultsContainer.innerHTML = ""; // Clear previous results
+        data.results.forEach((pokemon, index) => {
+          const pokemonDiv = document.createElement("div");
+          pokemonDiv.textContent = `${index + 1}. ${pokemon.name}`;
+          resultsContainer.appendChild(pokemonDiv);
+        });
+      })
+      .catch((error) => console.error("Error fetching Pokémon with limit:", error));
+  }
+  
+  // Fetch Pokémon and store in global variable
+  function fetchAndStorePokemon(limit) {
+    fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}`)
+      .then((response) => response.json())
+      .then((data) => {
+        pokeData = data.results; // Store fetched data globally
+        console.log("Global Pokémon Data:", pokeData);
+
+        // Update HTML dynamically
+        const resultsContainer = document.getElementById("results");
+        resultsContainer.innerHTML = ""; // Clear previous results
+        pokeData.forEach((pokemon, index) => {
+          const pokemonDiv = document.createElement("div");
+          pokemonDiv.textContent = `${index + 1}. ${pokemon.name}`;
+          resultsContainer.appendChild(pokemonDiv);
+        });
+      })
+      .catch((error) => console.error("Error fetching Pokémon globally:", error));
+  }
+  
+
+  // Update Heading Text
+  const mainHeading = document.querySelector("h1");
+  mainHeading.textContent = "Welcome to the JavaScript Tutorial!";
+</script>
